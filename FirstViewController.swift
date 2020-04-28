@@ -7,11 +7,11 @@
 //
 
 import UIKit
-
+ 
 class FirstViewController: UIViewController, UITextFieldDelegate {
     
     let defaults = UserDefaults.standard //Userdefaults to store clothing preferences
-    
+
     @IBOutlet weak var seventyAboveField: UITextField!
     @IBOutlet weak var fortyAboveField: UITextField!
     @IBOutlet weak var fortyBelowField: UITextField!
@@ -34,9 +34,11 @@ class FirstViewController: UIViewController, UITextFieldDelegate {
         zipCodeField.delegate = self
         
         checkForSavedPreferences()
+        
 
     }
     
+
     @IBAction func savePreferencesButtonTapped(_ sender: Any) {
         saveWeatherPreferences()
     }//Sets input information as default
@@ -60,5 +62,14 @@ class FirstViewController: UIViewController, UITextFieldDelegate {
         zipCodeField.text = locationEntryPreference
         
     } //Fills in default information when app is opened
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        seventyAboveField.resignFirstResponder()
+        fortyAboveField.resignFirstResponder()
+        fortyBelowField.resignFirstResponder()
+        zipCodeField.resignFirstResponder()
+        return true
+    }
+    
 }
 
