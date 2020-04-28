@@ -11,8 +11,10 @@ import Foundation
 import CoreLocation
 
 class SecondViewController: UIViewController {
-
+    
+        
     let defaults = UserDefaults.standard //Userdefaults to store clothing preferences
+    @IBOutlet weak var predictButton: UIButton!
     
     struct Keys {
            static let seventyaboveweather = "seventyaboveweather"
@@ -103,20 +105,20 @@ class SecondViewController: UIViewController {
         
         /* The following chunk of code is a general predictor for clothes based on the average temperature over the next 12 hours. It also establishes the ranges for certain types of clothing*/
         if average > 70 {
-            clothespredictorarray.append("Average Temperature over the next 12 hours = \(average). Wear \(seventyabove)") //Adds general clothing reccomendation to final clothing array
+            clothespredictorarray.append("The average temperature over the next 12 hours is \(average), so wear \(seventyabove)") //Adds general clothing reccomendation to final clothing array
             thresholdmin = 70
             thresholdmax = 120
             dictindex = 1
         }
         if average < 70 && average > 40 {
-            clothespredictorarray.append("Average Temperature over the next 12 hours = \(average). Wear \(fortyabove)")
+            clothespredictorarray.append("The average temperature over the next 12 hours is \(average), so wear \(fortyabove)")
             thresholdmin = 40
             thresholdmax = 70
             dictindex = 2
             
         }
         if average < 40 {
-            clothespredictorarray.append("Average Temperature over the next 12 hours = \(average). Wear \(fortybelow)")
+            clothespredictorarray.append("The average temperature over the next 12 hours is \(average), so wear \(fortybelow)")
             thresholdmin = 0
             thresholdmax = 40
             dictindex = 3
@@ -166,11 +168,11 @@ class SecondViewController: UIViewController {
                 }
 
                 if dictindex == 1 {
-                    clothespredictorarray.append("\(items) at \(times[index]). Wear \(seventyabove)")
+                    clothespredictorarray.append("Wear \(seventyabove) at \(times[index]) becuase \(items) to \(temp12[index]) degrees")
                 }
 
                 if dictindex == 2 {
-                    clothespredictorarray.append("\(items) at \(times[index]). Wear \(fortyabove)")
+                    clothespredictorarray.append("Wear \(fortyabove) at \(times[index]) becuase \(items) to \(temp12[index]) degrees")
                 }
                 changecounter = changecounter + 1
             }
@@ -182,11 +184,11 @@ class SecondViewController: UIViewController {
                 }
                 
                 if dictindex == 2 {
-                    clothespredictorarray.append("\(items) at \(times[index]). Wear \(fortyabove)")
+                    clothespredictorarray.append("Wear \(fortyabove) at \(times[index]) becuase \(items) to \(temp12[index]) degrees")
                 }
                 
                 if dictindex == 3 {
-                    clothespredictorarray.append("\(items) at \(times[index]). Wear \(fortybelow)")
+                    clothespredictorarray.append("Wear \(fortybelow) at \(times[index]) becuase \(items) to \(temp12[index]) degrees")
                 }
                 changecounter = changecounter + 1
             }
@@ -206,9 +208,11 @@ class SecondViewController: UIViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         getLocation()
+        predictButton.setTitleColor(.red, for: .normal)
     }
     
     @IBAction func predictButtonTapped(_ sender: Any) {
+        self.predictButton.setTitleColor(.green, for: .normal)
         
          var temperaturearray = [Double]()
          var timearray = [Double]()
@@ -223,12 +227,14 @@ class SecondViewController: UIViewController {
                  timestrings = self.unixConverter(timearray: timearray)//Calling unixConverter
                  clothespredictorarray = self.predictClothes(temp12: temperaturearray, times: timestrings)
                              
-                 let joinedclothespredictorarray = clothespredictorarray.joined(separator: "\n") //megring results in clothespredictorarray to display on UI
-                             
+                 let joinedclothespredictorarray = clothespredictorarray.joined(separator: "\n\n") //megring results in clothespredictorarray to display on UI
+            
                  DispatchQueue.main.async {
                      self.textDisplay.text = "\(joinedclothespredictorarray)"
+                    self.predictButton.setTitleColor(.red, for: .normal)
                  }//Displays clothespredictorarray on phone screen
          }
+        
     }//When predictButton is tapped, the main code is run with the algorithm.
     
     func getLocation() {
