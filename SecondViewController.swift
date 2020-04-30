@@ -106,35 +106,34 @@ class SecondViewController: UIViewController {
         print(average)
         /* The following chunk of code is a general predictor for clothes based on the average temperature over the next 12 hours. It also establishes the ranges for certain types of clothing*/
         if average > 70 {
-            clothespredictorarray.append("The average temperature over the next 12 hours is \(average), so wear \(seventyabove)") //Adds general clothing reccomendation to final clothing array
+            clothespredictorarray.append(" Wear \(seventyabove) - 12-hour average is \(average)") //Adds general clothing reccomendation to final clothing array
             thresholdmin = 70
             thresholdmax = 120
             dictindex = 1
         }
         if average < 70 && average > 40 {
-            clothespredictorarray.append("The average temperature over the next 12 hours is \(average), so wear \(fortyabove)")
+            clothespredictorarray.append("Wear \(fortyabove) - 12-hour average is \(average)")
             thresholdmin = 40
             thresholdmax = 70
             dictindex = 2
             
         }
         if average < 40 {
-            clothespredictorarray.append("The average temperature over the next 12 hours is \(average), so wear \(fortybelow)")
+            clothespredictorarray.append("Wear \(fortybelow) - 12-hour average is \(average)")
             thresholdmin = 0
             thresholdmax = 40
             dictindex = 3
         }
-
+         clothespredictorarray.append("                             Spikes/Dips:")
         let highnumber = thresholdmax + 30 //To establish boundaries for the other categories of temperature/clothing
         let lownumber = thresholdmin - 30
         
         //Checks if temperature jumps into a higher or lower category and appends the result to temperaturespikearray
-        print(temp12)
         for temp in temp12 {
             
                 if temp > thresholdmin && temp < thresholdmax {
                     tempspikeresults.append("Temperature returns to average")
-                
+                    
                 }
                 
                 if temp > thresholdmax && temp < highnumber {
@@ -167,14 +166,15 @@ class SecondViewController: UIViewController {
                 
                 if index == 0 || items != prevstring {
                     dictindex = dictindex - 1
+                    
                 }
 
                 if dictindex == 1 {
-                    clothespredictorarray.append("Wear \(seventyabove) at \(times[index]) becuase \(items) to \(temp12[index]) degrees")
+                    clothespredictorarray.append("Wear \(seventyabove) at \(times[index]) - \(items) to \(temp12[index]) degrees")
                 }
 
                 if dictindex == 2 {
-                    clothespredictorarray.append("Wear \(fortyabove) at \(times[index]) becuase \(items) to \(temp12[index]) degrees")
+                    clothespredictorarray.append("Wear \(fortyabove) at \(times[index]) - \(items) to \(temp12[index]) degrees")
                 }
                 changecounter = changecounter + 1
             }
@@ -186,11 +186,11 @@ class SecondViewController: UIViewController {
                 }
                 
                 if dictindex == 2 {
-                    clothespredictorarray.append("Wear \(fortyabove) at \(times[index]) becuase \(items) to \(temp12[index]) degrees")
+                    clothespredictorarray.append("Wear \(fortyabove) at \(times[index]) - \(items) to \(temp12[index]) degrees")
                 }
                 
                 if dictindex == 3 {
-                    clothespredictorarray.append("Wear \(fortybelow) at \(times[index]) becuase \(items) to \(temp12[index]) degrees")
+                    clothespredictorarray.append("Wear \(fortybelow) at \(times[index]) - \(items) to \(temp12[index]) degrees")
                 }
                 changecounter = changecounter + 1
             }
@@ -240,9 +240,10 @@ class SecondViewController: UIViewController {
                  clothespredictorarray = self.predictClothes(temp12: temperaturearray, times: timestrings)
                              
                  let joinedclothespredictorarray = clothespredictorarray.joined(separator: "\n\n") //megring results in clothespredictorarray to display on UI
+                    
             
                  DispatchQueue.main.async {
-                     self.textDisplay.text = "\(joinedclothespredictorarray)"
+                    self.textDisplay.text = "\(joinedclothespredictorarray)"
                     self.predictButton.setTitleColor(.red, for: .normal)
                  }//Displays clothespredictorarray on phone screen
          }
@@ -269,6 +270,7 @@ class SecondViewController: UIViewController {
         textDisplay.resignFirstResponder()
         return true
     }//Drops keyboard when text is typed in the text display.
+    
 }
 
 extension CLLocationManager {
