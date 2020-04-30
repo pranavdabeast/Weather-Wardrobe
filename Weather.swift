@@ -8,7 +8,7 @@
 import Foundation
 
 struct Weather {
-    let apparentTemperature:Double
+    let temperature:Double
     let time:Double
     
     enum SerializationError:Error {
@@ -19,11 +19,11 @@ struct Weather {
     
     init(json:[String:Any]) throws {
         
-        guard let apparentTemperature = json["apparentTemperature"] as? Double else {throw SerializationError.missing("apparentTemperature is missing")}
+        guard let temperature = json["temperature"] as? Double else {throw SerializationError.missing("temperature is missing")}
         
         guard let time = json["time"] as? Double else {throw SerializationError.missing("time is missing")}
         
-        self.apparentTemperature = apparentTemperature
+        self.temperature = temperature
         self.time = time
     } //error messages and declarations for apparentTemperature and time
     
@@ -33,7 +33,7 @@ struct Weather {
     static func forecast (withLocation location: String, completion: @escaping ([Weather]) -> ()) {
         
         let url = basePath + location
-        let request = URLRequest(url: URL(string: url)!)
+        let request = URLRequest(url: URL(string: url)!) //Creates the API request
         
         let task = URLSession.shared.dataTask(with: request) { (data:Data?, response:URLResponse?, error:Error?) in
             
@@ -53,7 +53,7 @@ struct Weather {
                             }
                         }
                     
-                    }
+                    } //Grabs the weathere data with specific headers
                 }catch {
                     print(error.localizedDescription)
                 }
@@ -61,7 +61,6 @@ struct Weather {
                 completion(forecastArray)
                 
             }
-            
             
         }
         
