@@ -10,6 +10,7 @@ import UIKit
 import Foundation
 import CoreLocation
 
+
 class SecondViewController: UIViewController {
     
         
@@ -37,7 +38,7 @@ class SecondViewController: UIViewController {
          for items in array {
 
              if itemcount < 12 {
-                 temperaturearray.append(items.apparentTemperature) //Appends temperature(double) into a new array
+                 temperaturearray.append(items.temperature) //Appends temperature(double) into a new array
                  itemcount = itemcount + 1
              }
 
@@ -75,7 +76,7 @@ class SecondViewController: UIViewController {
                            let localDate = dateFormatter.string(from: date)
                            timestrings.append(localDate)
                            
-                   }
+                    }
         return timestrings
     }// Function that converts UNIX-style times into hour-minute formats
 
@@ -102,7 +103,7 @@ class SecondViewController: UIViewController {
         }//Averaging function
         
         let average = (totalsum / itemcount)
-        
+        print(average)
         /* The following chunk of code is a general predictor for clothes based on the average temperature over the next 12 hours. It also establishes the ranges for certain types of clothing*/
         if average > 70 {
             clothespredictorarray.append("The average temperature over the next 12 hours is \(average), so wear \(seventyabove)") //Adds general clothing reccomendation to final clothing array
@@ -128,6 +129,7 @@ class SecondViewController: UIViewController {
         let lownumber = thresholdmin - 30
         
         //Checks if temperature jumps into a higher or lower category and appends the result to temperaturespikearray
+        print(temp12)
         for temp in temp12 {
             
                 if temp > thresholdmin && temp < thresholdmax {
@@ -207,21 +209,31 @@ class SecondViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
-        getLocation()
+     //   getZIPLocation()
         predictButton.setTitleColor(.red, for: .normal)
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(false)
+        
+        getZIPLocation()
     }
     
     @IBAction func predictButtonTapped(_ sender: Any) {
         self.predictButton.setTitleColor(.green, for: .normal)
-        
+        self.textDisplay.text = " "
+     //   getZIPLocation()
+//        print("*********")
+//        print(self.Latitude)
+//        print(self.Longitude)
          var temperaturearray = [Double]()
          var timearray = [Double]()
          var clothespredictorarray = [String]()
          var timestrings = [String]()
          let coordinatesAPI = "\(Latitude),\(Longitude)"
-        
-         Weather.forecast(withLocation: coordinatesAPI) { (results:[Weather]) in
-
+//        print(coordinatesAPI)
+        Weather.forecast(withLocation: coordinatesAPI) { (results:[Weather]) in
+            
                  temperaturearray = self.shorten12Temp(array:results) //Caling shorten 12 by passing an array, called "array" of results
                  timearray = self.shorten12Time(array: results) //Calling shorten12 for the times
                  timestrings = self.unixConverter(timearray: timearray)//Calling unixConverter
@@ -237,20 +249,26 @@ class SecondViewController: UIViewController {
         
     }//When predictButton is tapped, the main code is run with the algorithm.
     
-    func getLocation() {
+    func getZIPLocation() {
         
             let locationEntryPreference = defaults.value(forKey: Keys.locationEntry) as? String ?? ""
 //            guard let locationfield = locationEntryPreference else { return }
-            
+//            print("!!!!!!")
+//            print(locationEntryPreference)
             self.locationManager.getLocation(forPlaceCalled: locationEntryPreference) { location in
                 guard let location = location else { return }
                 self.Latitude = location.coordinate.latitude //setting latitude
                 self.Longitude = location.coordinate.longitude //setting longitude
-    //            print(self.Latitude)
-    //            print(self.Longitude)
-                
+//                print("???????")
+//                print(self.Latitude)
+//                print(self.Longitude)
             }
-        }//getLocation gets coordinates of the location that the user typed in.
+    }//getLocation gets coordinates of the location that the user typed in.
+    
+    func textFieldShouldReturn(_ textView: UITextView) -> Bool {
+        textDisplay.resignFirstResponder()
+        return true
+    }//Drops keyboard when text is typed in the text display.
 }
 
 extension CLLocationManager {
@@ -259,7 +277,7 @@ extension CLLocationManager {
     func getLocation(forPlaceCalled name: String,
                      completion: @escaping(CLLocation?) -> Void) {
         
-        let geocoder = CLGeocoder()
+        let geocoder = CLGeocoder() //Gets location from given input
         geocoder.geocodeAddressString(name) { placemarks, error in
             
             guard error == nil else {
