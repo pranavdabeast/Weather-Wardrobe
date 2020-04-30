@@ -7,7 +7,9 @@
 //
 
 import UIKit
- 
+import Foundation
+import CoreLocation
+
 class FirstViewController: UIViewController, UITextFieldDelegate {
     
     let defaults = UserDefaults.standard //Userdefaults to store clothing preferences
@@ -28,14 +30,12 @@ class FirstViewController: UIViewController, UITextFieldDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
-        seventyAboveField.delegate = self
+        seventyAboveField.delegate = self //Sets delegates for each text field
         fortyAboveField.delegate = self
         fortyBelowField.delegate = self
         zipCodeField.delegate = self
         
-        checkForSavedPreferences()
-        
-
+        checkForSavedPreferences() //Saves preferences and loads previous preferences
     }
     
 
@@ -51,7 +51,7 @@ class FirstViewController: UIViewController, UITextFieldDelegate {
     } //Sets input information as default
     
     func checkForSavedPreferences() {
-        let seventyaboveclothingpreference = defaults.value(forKey: Keys.seventyaboveweather) as? String ?? ""
+        let seventyaboveclothingpreference = defaults.value(forKey: Keys.seventyaboveweather) as? String ?? "" //This sets default values
         let fortyaboveclothingpreference = defaults.value(forKey: Keys.fortyaboveweather) as? String ?? ""
         let fortybelowclothingpreference = defaults.value(forKey: Keys.fortybelowweather) as? String ?? ""
         let locationEntryPreference = defaults.value(forKey: Keys.locationEntry) as? String ?? ""
@@ -69,7 +69,7 @@ class FirstViewController: UIViewController, UITextFieldDelegate {
         fortyBelowField.resignFirstResponder()
         zipCodeField.resignFirstResponder()
         return true
-    }
+    }// Function to drop the keyboard when the return key is pressed
     
 }
 
